@@ -36,10 +36,28 @@ public class ProductManagerTest {
     }
 
     @Test
-    public void shouldSearchByText() {
+    public void shouldSearchByTextInName() {
 
         Product[] expected = {book1};
         Product[] actual = manager.searchBy("wind");
+
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldSearchByTextInAuthor() {
+
+        Product[] expected = {book2};
+        Product[] actual = manager.searchBy("Scott");
+
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldSearchByManufacturer() {
+
+        Product[] expected = {smartphone2};
+        Product[] actual = manager.searchBy("Apple");
 
         assertArrayEquals(expected, actual);
     }
