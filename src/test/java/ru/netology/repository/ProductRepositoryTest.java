@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import ru.netology.domain.Book;
 import ru.netology.domain.Product;
 import ru.netology.domain.Smartphone;
+import ru.netology.exceptions.AlreadyExistsException;
+import ru.netology.exceptions.NotFoundException;
 import ru.netology.repository.ProductRepository;
 
 public class ProductRepositoryTest {
@@ -59,16 +61,26 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    public void shouldRemoveByNotFoundId() {
+    public void shouldThrowExceptionWhenNotFoundId() {
         repo.save(book1);
         repo.save(book2);
         repo.save(smartphone1);
-        repo.removeById(4);
 
-        Product[] expected = {book1, book2, smartphone1};
-        Product[] actual = repo.findAll();
 
-        assertArrayEquals(expected, actual);
+        assertThrows(NotFoundException.class, () -> {
+            repo.removeById(4);
+        });
     }
 
+    @Test
+    public void shouldThrowExceptionWhenProductAlreadyExists() {
+        repo.save(book1);
+        repo.save(book2);
+        repo.save(smartphone1);
+
+
+        assertThrows(AlreadyExistsException.class, () -> {
+            repo.save(book2);
+        });
+    }
 }
