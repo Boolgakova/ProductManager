@@ -6,6 +6,9 @@ public class ProductRepository {
     private Product[] products = new Product[0];
 
     public void save(Product product) {
+        if (findById(product.getId()) != null) {
+            throw new AlreadyExistsException("The product " + product + " already exists");
+        }
         Product[] tmp = new Product[products.length + 1];
         for (int i = 0; i < products.length; i++) {
             tmp[i] = products[i];
@@ -19,7 +22,10 @@ public class ProductRepository {
     }
 
     public void removeById(int id) {
-        Product[] tmp = new Product[getLength(id)];
+        if (findById(id) == null) {
+            throw new NotFoundException("Element with id: " + id + " not found");
+        }
+        Product[] tmp = new Product[products.length - 1];
         int copyToIndex = 0;
         for (Product product : products) {
             if (product.getId() != id) {
@@ -30,17 +36,12 @@ public class ProductRepository {
         products = tmp;
     }
 
-    public int getLength(int id) {
-        Product[] all = findAll();
-        int length = 0;
-        for (Product product : all) {
+    public Product findById(int id) {
+        for (Product product : products) {
             if (product.getId() == id) {
-                length = all.length - 1;
-                break;
-            } else {
-                length = all.length;
+                return product;
             }
         }
-        return length;
+        return null;
     }
 }
